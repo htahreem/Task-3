@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-3
+  namespace: hera
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-3
+  template:
+    metadata:
+      labels:
+        app: task-3
+    spec:
+      containers:
+        - name: task-3
+          image: postgres:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: htahreem
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres-username
+            - name: Cloudera2024
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres-password
+            - name: students
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres-database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-3-service
+spec:
+  selector:
+    app: task-3
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer

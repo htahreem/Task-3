@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-service
+  namespace: hera
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-service
+  template:
+    metadata:
+      labels:
+        app: golang-service
+    spec:
+      containers:
+        - name: golang-service
+          image: docker-sandbox.infra.cloudera.com/htahreem/backend
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: postgres-service.hera.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: htahreem
+            - name: DB_PASSWORD
+              value: Cloudera2024
+            - name: DB_NAME
+              value: students
